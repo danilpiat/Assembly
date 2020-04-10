@@ -1,42 +1,31 @@
-.model small
-.data
+.model   small
+.stack   100h
+.data 
+string      dw   1010111010111010b
+count      db   0
+.code
 
-a dw 1
-b dw 1
-c dw 1
-d dw 6
-e dw 1
-
-f dd ? 
-o dd ? 
-
-.CODE
-.486
-begin:
-mov ax,@data 
+begin:     
+mov ax, @data
 mov ds, ax
 
+      mov   cx,string
+      mov   bx,010b
+      mov   dx,111b
+      
+p1:      
+      push   cx
+      and   cx,dx
+      xor   cx,bx
+      jnz   p2
+      inc    count
+p2:      
+      pop   cx
+      shl   bx,1
+      shl   dx,1
+      jnc   p1
 
-movsx ecx,a
-movsx eax,e
-add ecx,eax
-sal ecx,2
+	 mov ax,4c00h
+	 int 21h
 
-movsx ebx,c
-sal ebx,1 
-movsx eax,d 
-imul eax
-sub ebx,eax ;2c-d^2
-movsx eax,a 
-imul eax	;a^2
-mov edx,eax 
-imul ebx;a^2*(2c-d^2)
-
-idiv ecx
-mov f,eax
-mov o,edx
-
-
-	mov ah, 4ch
-	int 21h
-end
+end      
